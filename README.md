@@ -61,7 +61,7 @@ The microservice follows a clean architecture with clear separation of concerns:
 ### 1. Clone the Repository
 
 ```bash
-git clone 
+git clone https://github.com/saivenkat-A7/kafka-microservice.git
 cd kafka-microservice
 ```
 

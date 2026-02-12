@@ -4,14 +4,7 @@
 
 This document provides an in-depth look at the architectural decisions, design patterns, and implementation details of the Event-Driven Microservice with Apache Kafka.
 
-## Table of Contents
 
-1. [Architecture Principles](#architecture-principles)
-2. [System Components](#system-components)
-3. [Event Flow](#event-flow)
-4. [Design Decisions](#design-decisions)
-5. [Scalability Considerations](#scalability-considerations)
-6. [Future Enhancements](#future-enhancements)
 
 ## Architecture Principles
 
@@ -235,42 +228,18 @@ Client          API            Producer        Kafka         Consumer      Event
 
 **Decision**: Use in-memory data structures instead of a database
 
-**Rationale**:
+**Advantages**:
 - **Focus on Core Concepts**: Emphasizes Kafka and event processing over database operations
 - **Simplicity**: Reduces dependencies and complexity
 - **Performance**: Extremely fast read/write operations
 - **Demonstration**: Sufficient for demonstrating idempotency and event storage
 
-**Trade-offs**:
-- ❌ Data lost on restart
-- ❌ No persistence across deployments
-- ❌ Limited by available RAM
-- ✅ Zero database setup/configuration
-- ✅ Fast development and testing
+**Disadvantages**:
+- Data lost on restart
+- No persistence across deployments
+- Limited by available RAM
 
-**Production Alternative**:
-```javascript
-// Replace EventStore with database
-class EventStore {
-  async addEvent(event) {
-    // Check existence
-    const exists = await db.query(
-      'SELECT eventId FROM events WHERE eventId = $1',
-      [event.eventId]
-    );
-    
-    if (exists.rows.length > 0) return false;
-    
-    // Insert with transaction
-    await db.query(
-      'INSERT INTO events (eventId, userId, eventType, timestamp, payload) VALUES ($1, $2, $3, $4, $5)',
-      [event.eventId, event.userId, event.eventType, event.timestamp, event.payload]
-    );
-    
-    return true;
-  }
-}
-```
+
 
 ### 2. Why Partition by UserId?
 
@@ -447,68 +416,6 @@ const eventSchema = {
 };
 ```
 
-### 3. Observability
-
-**Metrics to Track**:
-- Events published/sec
-- Events consumed/sec
-- Consumer lag
-- Duplicate events detected
-- Error rate
-
-**Implementation**:
-```javascript
-// Prometheus metrics
-const promClient = require('prom-client');
-
-const eventsPublished = new promClient.Counter({
-  name: 'events_published_total',
-  help: 'Total events published to Kafka'
-});
-
-const duplicateEvents = new promClient.Counter({
-  name: 'duplicate_events_total',
-  help: 'Total duplicate events detected'
-});
-```
-
-### 4. Event Sourcing
-
-**Purpose**: Use events as source of truth for application state
-
-```javascript
-// Rebuild state from events
-async rebuildState() {
-  const events = await eventStore.getAllEvents();
-  
-  const userSessions = events.reduce((state, event) => {
-    if (event.eventType === 'LOGIN') {
-      state[event.userId] = { loggedIn: true, loginTime: event.timestamp };
-    } else if (event.eventType === 'LOGOUT') {
-      state[event.userId] = { loggedIn: false, logoutTime: event.timestamp };
-    }
-    return state;
-  }, {});
-  
-  return userSessions;
-}
-```
-
-### 5. CQRS Pattern
-
-**Purpose**: Separate read and write models
-
-```
-Write Model (Commands)
-  ↓
-Kafka Events
-  ↓
-Read Model (Queries)
-  - User sessions view
-  - Product views aggregation
-  - Analytics dashboard
-```
-
 ## Security Considerations
 
 ### 1. Authentication & Authorization
@@ -539,13 +446,5 @@ const limiter = rateLimit({
 app.use('/events/generate', limiter);
 ```
 
-## Conclusion
 
-This architecture provides a solid foundation for an event-driven microservice while remaining simple enough to understand and extend. The design prioritizes:
-
-- ✅ Clear separation of concerns
-- ✅ Robust error handling
-- ✅ Idempotent event processing
-- ✅ Scalability considerations
-- ✅ Production-ready patterns
 

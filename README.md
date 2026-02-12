@@ -2,19 +2,9 @@
 
 A production-ready microservice implementation demonstrating event-driven architecture using Apache Kafka. This service acts as both a producer and consumer, publishing and processing user activity events with built-in idempotency and robust error handling.
 
-## 📋 Table of Conten
 
-- [Features](#features)
-- [Architecture](#architecture)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [API Documentation](#api-documentation)
-- [Testing](#testing)
-- [Project Structure](#project-structure)
-- [Configuration](#configuration)
-- [Development](#development)
 
-## ✨ Features
+##  Features
 
 - **Event-Driven Architecture**: Asynchronous communication using Apache Kafka
 - **Producer & Consumer**: Single service handles both publishing and consuming events
@@ -26,7 +16,7 @@ A production-ready microservice implementation demonstrating event-driven archit
 - **Docker Support**: Fully containerized with Docker Compose
 - **Graceful Shutdown**: Proper cleanup of Kafka connections
 
-## 🏗️ Architecture
+##  Architecture
 
 The microservice follows a clean architecture with clear separation of concerns:
 
@@ -66,18 +56,12 @@ The microservice follows a clean architecture with clear separation of concerns:
 7. **Storage**: Event is stored in in-memory data structure (if not duplicate)
 8. **Retrieval**: Client can query processed events via `/events/processed`
 
-## 📦 Prerequisites
-
-- **Docker**: Version 20.10 or higher
-- **Docker Compose**: Version 2.0 or higher
-- **Node.js**: Version 18 or higher (for local development)
-http://localhost:3000/health
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone 
 cd kafka-microservice
 ```
 
@@ -158,7 +142,7 @@ curl http://localhost:3000/events/processed
 }
 ```
 
-## 📚 API Documentation
+##  API Documentation
 
 ### Base URL
 ```
@@ -272,33 +256,32 @@ curl http://localhost:3000/events/processed
 curl http://localhost:3000/health
 ```
 
-## 🧪 Testing
+##  Testing
 
 ### Run All Tests
 
-```bash
-# Run all tests with coverage
-npm test
 
-# Or using Docker
+
+#  using Docker
+```
 docker-compose exec app npm test
 ```
 
 ### Run Unit Tests Only
 
-```bash
-npm run test:unit
 
-# Or using Docker
+
+# using Docker
+```
 docker-compose exec app npm run test:unit
 ```
 
 ### Run Integration Tests Only
 
-```bash
-npm run test:integration
 
-# Or using Docker
+
+#  using Docker
+```
 docker-compose exec app npm run test:integration
 ```
 
@@ -315,85 +298,10 @@ Tests:       30+ passed, 30+ total
 Coverage:    > 85%
 ```
 
-## 📁 Project Structure
 
-```
-kafka-microservice/
-├── src/
-│   ├── controllers/
-│   │   └── eventController.js      # API endpoint handlers
-│   ├── services/
-│   │   ├── eventStore.js           # In-memory event storage
-│   │   ├── kafkaProducer.js        # Kafka producer service
-│   │   └── kafkaConsumer.js        # Kafka consumer service
-│   ├── utils/
-│   │   ├── logger.js               # Winston logger configuration
-│   │   └── validator.js            # Event validation utilities
-│   ├── app.js                       # Express app setup
-│   ├── routes.js                    # API route definitions
-│   └── index.js                     # Application entry point
-├── tests/
-│   ├── unit/
-│   │   ├── validator.test.js       # Validator unit tests
-│   │   └── eventStore.test.js      # EventStore unit tests
-│   └── integration/
-│       └── api.test.js              # API integration tests
-├── config/
-│   └── index.js                     # Application configuration
-├── docker-compose.yml               # Docker orchestration
-├── Dockerfile                       # Application container definition
-├── package.json                     # Node.js dependencies
-├── .env.example                     # Environment variables template
-├── .gitignore                       # Git ignore rules
-├── README.md                        # This file
-└── ARCHITECTURE.md                  # Detailed architecture documentation
-```
 
-## ⚙️ Configuration
 
-### Environment Variables
 
-Copy `.env.example` to `.env` and customize as needed:
-
-```bash
-cp .env.example .env
-```
-
-**Available Variables**:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NODE_ENV` | Environment (development/production) | `development` |
-| `PORT` | Application port | `3000` |
-| `APP_NAME` | Application name | `kafka-microservice` |
-| `KAFKA_BROKER` | Kafka broker address | `kafka:9092` |
-| `KAFKA_CLIENT_ID` | Kafka client identifier | `event-microservice` |
-| `KAFKA_TOPIC` | Kafka topic name | `user-activity-events` |
-| `KAFKA_CONSUMER_GROUP` | Consumer group ID | `user-activity-consumer-group` |
-| `KAFKA_CONNECTION_TIMEOUT` | Connection timeout (ms) | `30000` |
-| `KAFKA_REQUEST_TIMEOUT` | Request timeout (ms) | `30000` |
-| `KAFKA_RETRY_ATTEMPTS` | Number of retry attempts | `5` |
-| `KAFKA_RETRY_DELAY` | Delay between retries (ms) | `300` |
-| `LOG_LEVEL` | Logging level | `info` |
-
-## 🛠️ Development
-
-### Local Development Setup
-
-1. **Install Dependencies**:
-```bash
-npm install
-```
-
-2. **Start Kafka (Docker)**:
-```bash
-docker-compose up zookeeper kafka
-```
-
-3. **Run Application Locally**:
-```bash
-npm run dev
-```
 
 ### Stopping Services
 
@@ -412,25 +320,12 @@ docker-compose down -v
 docker-compose logs -f
 
 # View specific service logs
-docker-compose logs -f app-service
+docker-compose logs -f app
 docker-compose logs -f kafka
 ```
 
-### Accessing Kafka Container
 
-```bash
-# Access Kafka container
-docker-compose exec kafka bash
-
-# List topics
-kafka-topics --list --bootstrap-server localhost:9092
-
-# Consume messages from topic
-kafka-console-consumer --bootstrap-server localhost:9092 \
-  --topic user-activity-events --from-beginning
-```
-
-## 🔍 Monitoring and Debugging
+##  Monitoring and Debugging
 
 ### Check Kafka Topics
 
@@ -451,7 +346,7 @@ docker-compose exec kafka kafka-console-consumer \
 ### View Application Logs
 
 ```bash
-docker-compose logs -f app-service
+docker-compose logs -f app
 ```
 
 ## 🎯 Key Implementation Details
@@ -483,15 +378,4 @@ process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 ```
 
-## 📝 License
-
-MIT
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
 

@@ -349,7 +349,7 @@ docker-compose exec kafka kafka-console-consumer \
 docker-compose logs -f app
 ```
 
-## 🎯 Key Implementation Details
+##   Implementation Details
 
 ### Idempotency
 

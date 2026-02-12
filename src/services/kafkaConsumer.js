@@ -1,5 +1,5 @@
 const { Kafka, logLevel } = require('kafkajs');
-const config = require('../config');
+const config = require('../../config');
 const logger = require('../utils/logger');
 const eventStore = require('./eventStore');
 
@@ -24,7 +24,9 @@ class KafkaConsumerService {
     this.isRunning = false;
   }
 
-
+  /**
+   * Connects and starts the consumer
+   */
   async connect() {
     try {
       await this.consumer.connect();
@@ -43,7 +45,9 @@ class KafkaConsumerService {
     }
   }
 
-
+  /**
+   * Starts consuming messages
+   */
   async startConsuming() {
     if (!this.isConnected) {
       throw new Error('Consumer is not connected to Kafka');
@@ -73,7 +77,7 @@ class KafkaConsumerService {
    */
   async handleMessage(topic, partition, message) {
     try {
-     
+      // Parse the message value
       const eventString = message.value.toString();
       const event = JSON.parse(eventString);
 
@@ -86,7 +90,7 @@ class KafkaConsumerService {
         eventType: event.eventType,
       });
 
-      
+      // Process the event with idempotency
       const wasAdded = await this.processEvent(event);
 
       if (wasAdded) {
@@ -97,7 +101,7 @@ class KafkaConsumerService {
         });
       }
     } catch (error) {
-      
+      // Handle malformed messages gracefully
       logger.error('Error processing message', {
         error: error.message,
         topic,
@@ -106,7 +110,8 @@ class KafkaConsumerService {
         rawMessage: message.value?.toString().substring(0, 100),
       });
 
-     
+      // Don't throw - this allows consumer to continue processing other messages
+      // In production, could send to DLQ here
     }
   }
 
@@ -117,13 +122,13 @@ class KafkaConsumerService {
    */
   async processEvent(event) {
     try {
-      
+      // Validate event has required fields
       if (!event.eventId || !event.userId || !event.eventType) {
         logger.warn('Invalid event structure', { event });
         return false;
       }
 
-      
+      // Log the event to stdout as required
       console.log(JSON.stringify({
         action: 'EVENT_CONSUMED',
         eventId: event.eventId,
@@ -132,7 +137,7 @@ class KafkaConsumerService {
         timestamp: new Date().toISOString(),
       }));
 
-     
+      // Store event with idempotency check
       const wasAdded = eventStore.addEvent(event);
 
       return wasAdded;
@@ -145,7 +150,9 @@ class KafkaConsumerService {
     }
   }
 
- 
+  /**
+   * Disconnects the consumer from Kafka
+   */
   async disconnect() {
     try {
       this.isRunning = false;
@@ -159,5 +166,5 @@ class KafkaConsumerService {
   }
 }
 
-
+// Export singleton instance
 module.exports = new KafkaConsumerService();

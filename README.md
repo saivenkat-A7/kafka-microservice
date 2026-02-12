@@ -2,7 +2,7 @@
 
 A production-ready microservice implementation demonstrating event-driven architecture using Apache Kafka. This service acts as both a producer and consumer, publishing and processing user activity events with built-in idempotency and robust error handling.
 
-## 📋 Table of Contents
+## 📋 Table of Conten
 
 - [Features](#features)
 - [Architecture](#architecture)
@@ -71,7 +71,7 @@ The microservice follows a clean architecture with clear separation of concerns:
 - **Docker**: Version 20.10 or higher
 - **Docker Compose**: Version 2.0 or higher
 - **Node.js**: Version 18 or higher (for local development)
-
+http://localhost:3000/health
 ## 🚀 Quick Start
 
 ### 1. Clone the Repository
@@ -97,7 +97,7 @@ This command will:
 
 ```bash
 # Check service health
-curl http://localhost:3000/health
+curl 
 
 # Expected response:
 {
@@ -281,7 +281,7 @@ curl http://localhost:3000/health
 npm test
 
 # Or using Docker
-docker-compose exec app-service npm test
+docker-compose exec app npm test
 ```
 
 ### Run Unit Tests Only
@@ -290,7 +290,7 @@ docker-compose exec app-service npm test
 npm run test:unit
 
 # Or using Docker
-docker-compose exec app-service npm run test:unit
+docker-compose exec app npm run test:unit
 ```
 
 ### Run Integration Tests Only
@@ -299,7 +299,7 @@ docker-compose exec app-service npm run test:unit
 npm run test:integration
 
 # Or using Docker
-docker-compose exec app-service npm run test:integration
+docker-compose exec app npm run test:integration
 ```
 
 ### Test Coverage

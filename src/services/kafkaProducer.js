@@ -1,5 +1,5 @@
 const { Kafka, logLevel } = require('kafkajs');
-const config = require('../config');
+const config = require('../../config');
 const logger = require('../utils/logger');
 
 class KafkaProducerService {
@@ -21,7 +21,9 @@ class KafkaProducerService {
     this.isConnected = false;
   }
 
- 
+  /**
+   * Connects the producer to Kafka
+   */
   async connect() {
     try {
       await this.producer.connect();
@@ -45,7 +47,7 @@ class KafkaProducerService {
 
     try {
       const message = {
-        key: event.userId, 
+        key: event.userId, // Partition by userId for ordering
         value: JSON.stringify(event),
         headers: {
           eventType: event.eventType,
@@ -75,7 +77,9 @@ class KafkaProducerService {
     }
   }
 
- 
+  /**
+   * Disconnects the producer from Kafka
+   */
   async disconnect() {
     try {
       await this.producer.disconnect();
@@ -88,5 +92,5 @@ class KafkaProducerService {
   }
 }
 
-
+// Export singleton instance
 module.exports = new KafkaProducerService();

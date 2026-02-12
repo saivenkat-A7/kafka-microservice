@@ -52,7 +52,7 @@ services:
       - kafka-network
 
   # Application service
-  app-service:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
